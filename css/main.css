@@ -1,4 +1,8 @@
 :root {
+    --content-width: 1160px;
+    --content-width--small: 560px;
+    --content-width--medium: 700px;
+
     --navbar-height-large: 80px;
     --navbar-height-small: 60px;
     --background-color: black;
@@ -11,6 +15,7 @@
 
 body {
     background-color: grey;
+    width: 100%;
 }
 
 img {
@@ -22,10 +27,49 @@ img {
     width: auto;
 }
 
+.container {
+    display: flex;
+    max-width: var(--content-width);
+    height:auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+    justify-content: space-between;
+
+    border: 1px dotted;
+}
+
+.item.brand {
+    display:inline-flex;
+    font-size:large;
+    width: 150px;
+    height: 30px;
+    margin-bottom: 15px;
+    margin-right: 5px;
+    
+}
 .navigation {
+    position: static;
+    display: block;
     height: var(--navbar-height-large);
     width: 100%;
-    border: 1px solid;    
+    padding-top: 32px;
+       
     /* background: var(--background-color); */
 }
 
+.navigation nav {
+    align-items: center;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-between;
+    
+}
+
+.nav-item-outer {
+    width:fit-content;
+}
+
+.theme-toggle {
+    align-self: flex-end;
+}
