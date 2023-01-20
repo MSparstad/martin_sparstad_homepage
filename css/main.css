@@ -6,6 +6,10 @@
     --navbar-height-large: 80px;
     --navbar-height-small: 60px;
     --background-color: black;
+    --logo-area-with: 250px;
+
+    --font-family-base: "Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+
 }
 *{
     box-sizing: border-box;
@@ -21,6 +25,10 @@ body {
 img {
     display: block;
     max-width: 100%;
+}
+
+a {
+    color: rgb(119, 50, 126);
 }
 
 .body-wrapper {
@@ -41,20 +49,28 @@ img {
 
 .item.brand {
     display:inline-flex;
-    font-size:large;
-    width: 150px;
+    font-size: x-large;
+    width: var(--logo-area-with);
     height: 30px;
-    margin-bottom: 15px;
+    margin-top: 5px;
     margin-right: 5px;
+    margin-bottom: 15px;
+    
     
 }
+
+.logo {
+    margin-right: 25px;
+}
+
 .navigation {
     position: static;
     display: block;
     height: var(--navbar-height-large);
     width: 100%;
     padding-top: 32px;
-       
+    fontf
+    font-size: large;
     /* background: var(--background-color); */
 }
 
@@ -64,6 +80,11 @@ img {
     gap: 1.5rem;
     justify-content: space-between;
     
+}
+
+.navigation a {
+    background: transparent;
+    text-decoration: none;
 }
 
 .nav-item-outer {
