@@ -5,7 +5,8 @@
 
     --navbar-height-large: 80px;
     --navbar-height-small: 60px;
-    --background-color: black;
+    --background-color: #e3d8d8;
+    --highlight-color: #92DCE5;
     --logo-area-with: 250px;
 
     --font-family-base: "Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
@@ -18,7 +19,7 @@
 }
 
 body {
-    background-color: grey;
+    background: linear-gradient(45deg, red, green);;
     width: 100%;
 }
 
@@ -43,6 +44,7 @@ a {
     margin-right: auto;
     padding: 0 2rem;
     justify-content: space-between;
+     
 
     border: 1px dotted;
 }
@@ -69,7 +71,6 @@ a {
     height: var(--navbar-height-large);
     width: 100%;
     padding-top: 32px;
-    fontf
     font-size: large;
     /* background: var(--background-color); */
 }
