@@ -109,8 +109,22 @@ main {
     margin-top: 6rem;
 }
 
+.hero-wrapper {
+    display: grid;
+    width: 100%;
+}
+
 .hero-description {
     margin-top: 1rem;
     line-height: 1.6;
     font-weight: 500;
+}
+
+.decoration {
+    width: 50%;
+}
+
+.hero-image {
+    
+    height: 16rem;
 }
