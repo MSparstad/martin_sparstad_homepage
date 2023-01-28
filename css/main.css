@@ -111,20 +111,57 @@ main {
 
 .hero-wrapper {
     display: grid;
+    grid-template-columns: 3fr 2fr;
     width: 100%;
+}
+
+.index {
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .hero-description {
     margin-top: 1rem;
+    margin-left: 0.5rem;
     line-height: 1.6;
     font-weight: 500;
+    font-size: 1.2rem;
 }
 
 .decoration {
-    width: 50%;
+   
 }
 
 .hero-image {
+    box-shadow: 8px 8px tomato;
+    height: 14rem;
+}
+
+.segment.blog-segment {
+    margin: 4rem 0;
+    width: 100%
+}
+
+.blog-segment h2 {
+    margin: 1rem 0;
     
-    height: 16rem;
+}
+
+.posts {
+    display: grid;
+}
+
+a.post {
+    display: flex;
+    gap: 1rem;
+    padding: 0.4rem 0;
+    border-bottom: lightslategray 1px solid;
+}
+
+a.post time {
+    margin-left: auto;
+}
+
+a.post:last-of-type {
+    border: none;
 }
