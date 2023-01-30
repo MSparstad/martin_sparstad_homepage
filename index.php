@@ -62,7 +62,7 @@
                                 <p class="hero-description small width">Dette er et samlested for mine aktiviteter<br> på nett.
                                     Jeg liker å lage musikk, programere og spille
                                     spill.<br>Her håper jeg å samle en god blanding av det hele,<br> 
-                                    både som motivasjon for a å lage ting og som et verktøy for tilbakeblikk.
+                                    både som motivasjon for a å lage ting og som et verktøy for tilbakeblikk.                                    
                                     </p>
                             </header>
                             <div class="decoration">
