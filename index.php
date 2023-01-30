@@ -3,6 +3,9 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
+<?php 
+include_once('scripts/connection.php');
+?>
 <html>
     <head>
         <meta charset="utf-8">
@@ -86,6 +89,18 @@
                                     <h3>Test post 3</h3>
                                     <time>January 28, 2023</time>
                                 </a>
+                                <?php
+                                $sql = 'SELECT * from posts;';
+                                $result = mysqli_query($connection, $sql);
+                                $resultCheck = mysqli_num_rows($result);
+                                
+                                if($resultCheck > 0){
+                                    while($row = mysqli_fetch_assoc($result)) {
+                                        echo '<a class="post"><h3>' . $row['title'] . '</h3><time>' . $row['time'] . '</time></a>';
+                                    }
+                                }
+                                
+                                ?>
                             </div>
                         </section>
                     </div>                    
