@@ -3,9 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
-<?php 
-include_once('scripts/connection.php');
-?>
+
 <html>
     <head>
         <meta charset="utf-8">
@@ -26,7 +24,7 @@ include_once('scripts/connection.php');
                         </a>
                         <nav>
                             <div class="nav-item-outer">
-                                <a class="mobile-only" href="martinsparstad.com">
+                                <a class="mobile-only" href="admin.php">
                                     <span>Home</span>
                                 </a>
                             </div>
@@ -89,6 +87,7 @@ include_once('scripts/connection.php');
                                     <h3>Test post 3</h3>
                                     <time>January 28, 2023</time>
                                 </a>
+                                <?php include_once('scripts/connection.php'); ?>
                                 <?php
                                 $sql = 'SELECT * from posts;';
                                 $result = mysqli_query($connection, $sql);
@@ -98,8 +97,7 @@ include_once('scripts/connection.php');
                                     while($row = mysqli_fetch_assoc($result)) {
                                         echo '<a class="post"><h3>' . $row['title'] . '</h3><time>' . $row['time'] . '</time></a>';
                                     }
-                                }
-                                
+                                }                                
                                 ?>
                             </div>
                         </section>
