@@ -10,7 +10,7 @@
         <title>Admin Panel</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="">
+        <link rel="stylesheet" href="css/admin.css">
     </head>
     <body>
         <!--[if lt IE 7]>
@@ -18,7 +18,13 @@
         <![endif]-->
         <main>
             <div class="container">
-                <div class="form-container"></div>
+                <div class="form-container">
+                    <form class="postform">
+                        <input class="title" placeholder="Title">
+                        <textarea class="content" placeholder="Content"></textarea>
+                        <input class="submit" type="submit" value="submit">
+                    </form>
+                </div>
                 <div class="form-container"></div>
             </div>
         </main>
