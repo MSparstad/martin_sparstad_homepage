@@ -1,7 +1,13 @@
 @import "fonts.css";
 
 :root {
-    --content-width: 500px;
+    --content-width: 1200px;
+    --background-color: #141314;
+    --highlight-color: #87BFFF;
+
+    --font-color: #ffff;
+    --nav-font-color: #808080;
+    --font-family-base: "Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
 }
 
 *{
@@ -10,14 +16,26 @@
     margin: 0;
 }
 
-main {
-    
+body {
+    background-color: var(--background-color);
+    color: var(--font-color);
 }
 
 .container {
+    display: flex;
     max-width: var(--content-width);
-    margin: auto;
+    
     margin-top: 75px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.forms {
+    display: inline-block;
+    width: 50%;
+    padding: 25px;
+    border: 2px solid var(--highlight-color);
+    border-radius: 15px;
 }
 
 input {
@@ -33,10 +51,40 @@ input {
 
 .content {
     max-width: 100%;
-    max-height: fit-content;
 }
 
 .submit {
     width: fit-content;
-    padding: 5px    ;
+    padding: 5px;
+}
+
+.forms {
+    margin-right: 30px;
+}
+
+.post-list {
+    display: inline-block;
+    width: 50%;
+    padding: 25px;
+    border: 2px solid var(--highlight-color);
+    border-radius: 15px;
+}
+
+.post-list h2 {
+    margin-bottom: 10px;
+}
+
+.post {
+    display: flex;
+    width: 100%;
+    height:auto;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--highlight-color);
+}
+
+
+
+.post h3 {
+    margin-right: auto;
 }

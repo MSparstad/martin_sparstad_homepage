@@ -18,14 +18,32 @@
         <![endif]-->
         <main>
             <div class="container">
-                <div class="form-container">
-                    <form class="postform">
-                        <input class="title" placeholder="Title">
-                        <textarea class="content" placeholder="Content"></textarea>
-                        <input class="submit" type="submit" value="submit">
-                    </form>
+                <div class="forms">
+                    <h1>Add posts</h1>
+                    <br>
+                    <div class="form-container">
+                        <form class="postform">
+                            <input class="title" placeholder="Title">
+                            <textarea class="content" placeholder="Content"></textarea>
+                            <input class="submit" type="submit" value="submit">
+                        </form>
+                    </div>
                 </div>
-                <div class="form-container"></div>
+                <div class="post-list">
+                    <h2>posts</h2>
+                    <?php include_once('scripts/connection.php'); ?>
+                                <?php
+                                $sql = 'SELECT * from posts;';
+                                $result = mysqli_query($connection, $sql);
+                                $resultCheck = mysqli_num_rows($result);
+                                
+                                if($resultCheck > 0){
+                                    while($row = mysqli_fetch_assoc($result)) {
+                                        echo '<a class="post"><h3>' . $row['title'] . '</h3><time>' . $row['time'] . '</time></a>';
+                                    }
+                                }                                
+                                ?>
+                </div>
             </div>
         </main>
     </body>
