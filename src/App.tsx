@@ -1,5 +1,4 @@
 import ListGroup from "./Components/listGroup";
-import Game from "./Components/ticTacToe";
 import Header from "./Components/header";
 import HeroSection from "./Components/heroSection";
 import Footer from "./Components/footer";
