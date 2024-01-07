@@ -126,6 +126,7 @@ main {
   grid-template-columns: 3fr 2fr;
   column-gap: 1.4rem;
   width: 100%;
+  height: fit-content;
 }
 
 .index {
@@ -145,11 +146,12 @@ main {
 }
 
 .decoration {
+  margin-top: 2rem;
 }
 
 .hero-image {
   box-shadow: 8px 8px tomato;
-  /* height: 14rem; */
+  height: 14rem;
 }
 
 .theme-img nav body {
