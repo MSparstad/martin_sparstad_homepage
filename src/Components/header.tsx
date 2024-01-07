@@ -1,5 +1,5 @@
 import React from "react";
-import Logo from "./logo";
+import Logoimg from "./logo";
 import LinkBar from "./linkBar";
 import Theme from "./theme";
 
@@ -12,7 +12,7 @@ class Header extends React.Component {
     return (
       <header className="navigation container">
         <div className="nav-wrapper">
-          <Logo />
+          <Logoimg />
           <LinkBar />
         </div>
         <Theme />
