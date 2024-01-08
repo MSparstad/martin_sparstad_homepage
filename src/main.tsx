@@ -8,6 +8,7 @@ import Gallery from "./Gallery";
 import ErrorPage from "./error-page";
 import "bootstrap/dist/css/bootstrap.css";
 import "./main.css";
+import ComingSoon from "./comingSoon";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,12 @@ const router = createBrowserRouter([
   {
     path: "/Gallery",
     element: <Gallery />,
+    errorElement: <ErrorPage />
+  },
+
+  {
+    path: "/ComingSoon",
+    element: <ComingSoon />,
     errorElement: <ErrorPage />
   },
 ]);

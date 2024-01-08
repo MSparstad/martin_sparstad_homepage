@@ -1,8 +1,12 @@
+import React from "react";
 import Footer from "./Components/footer";
 import Header from "./Components/header";
 
-function Gallery() {
-  return (
+class Gallery extends React.Component {
+  constructor(props: any) {
+    super(props);
+  }
+  render(){return (
     <div className="body-wrapper">
       <Header />
       <main>
@@ -31,6 +35,6 @@ function Gallery() {
       <Footer />
     </div>
   );
-}
+}}
 
 export default Gallery;

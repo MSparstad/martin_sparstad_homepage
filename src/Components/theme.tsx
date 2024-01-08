@@ -1,7 +1,9 @@
 function Theme() {
   return (
     <div className="theme-swap">
-      <img className="theme-img" alt="theme button"></img>
+      <button id="theme-toggle">
+         <img className="theme-img" alt="theme button"></img>
+      </button>
     </div>
   );
 }
