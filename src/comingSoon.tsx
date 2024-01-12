@@ -6,7 +6,7 @@ function ComingSoon() {
         <div className="body-wrapper">
             <Header />
             <main>
-                <div>
+                <div className="container">
                     <h2>Denne delen av siden er fortsatt underveis, bare å mase</h2>
                 </div>
             </main>

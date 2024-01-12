@@ -3,18 +3,21 @@ import React from "react";
 class LinkBar extends React.Component {
 
   render() {
-    const dev = true;
+    const dev = false;
     let musicLink;
     let galleryLink;
     let diverseLink;
+    let miscLink;
 
     if (dev) {
       musicLink = <a className="nav-link" href={`/Music`}>Musikk</a>
       galleryLink = <a className="nav-link" href={`/Gallery`}>Musikk</a>
+      miscLink = <a className="nav-link" href={`/Gallery`}>Musikk</a>
     }
     else {
       musicLink = <a className="nav-link" href={`/ComingSoon`}>Musikk</a>
-      galleryLink = <a className="nav-link" href={`/ComingSoon`}>Musikk</a>
+      galleryLink = <a className="nav-link" href={`/ComingSoon`}>Galleri</a>
+      miscLink = <a className="nav-link" href={`/ComingSoon`}>Diverse</a>
     }
     return (
 
@@ -34,7 +37,9 @@ class LinkBar extends React.Component {
         <div className="nav-item-outer">
         {galleryLink}
         </div>
-        <a className="nav-link">Diverse</a>
+        <div className="nav-item-outer">
+          {miscLink}
+        </div>
         <a className="nav-link" href="https://github.com/MSparstad/">GitHub</a>
       </nav>
 
