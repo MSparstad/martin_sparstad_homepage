@@ -210,3 +210,8 @@ footer > .container {
   flex-direction: row;
   justify-content: space-evenly;
 }
+
+ImageGallery {
+  width: 100%
+
+}

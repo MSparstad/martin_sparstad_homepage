@@ -3,7 +3,7 @@ import React from "react";
 class LinkBar extends React.Component {
 
   render() {
-    const dev = false;
+    const dev = true;
     let musicLink;
     let galleryLink;
     let diverseLink;
@@ -11,8 +11,8 @@ class LinkBar extends React.Component {
 
     if (dev) {
       musicLink = <a className="nav-link" href={`/Music`}>Musikk</a>
-      galleryLink = <a className="nav-link" href={`/Gallery`}>Musikk</a>
-      miscLink = <a className="nav-link" href={`/Gallery`}>Musikk</a>
+      galleryLink = <a className="nav-link" href={`/Gallery`}>Galleri</a>
+      miscLink = <a className="nav-link" href={`/Gallery`}>Diverse</a>
     }
     else {
       musicLink = <a className="nav-link" href={`/ComingSoon`}>Musikk</a>
