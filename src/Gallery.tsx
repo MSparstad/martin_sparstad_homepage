@@ -4,6 +4,9 @@ import Header from "./Components/header";
 import ImageGallery from "react-image-gallery";
 import sadFox from "./assets/taxidermy.png"
 
+// const fs = require('fs'); 
+// fs.readdir("./assets/old_shit",(err, files)=>console.log(files)){}
+
 const images = [{original:sadFox, thumbnail:""},{original:sadFox, thumbnail:sadFox},{original:sadFox, thumbnail:sadFox}];
 
 class Gallery extends React.Component {
@@ -17,7 +20,6 @@ class Gallery extends React.Component {
         <Header />
         <main>
           <div className="gallery-container">
-          <ImageGallery  items={images} showThumbnails={true} />
             <div className="gallery-head">
               <h1 className="gallery-h1">Gallery</h1>
             </div>
@@ -35,9 +37,21 @@ class Gallery extends React.Component {
                 <div className="category">
                   <span>Kategori 4</span>
                 </div>
-              </div>
-              
+                <div className="category">
+                  <span>Kategori 5</span>
+                </div>
+                <div className="category">
+                  <span>Kategori 6</span>
+                </div>
+                <div className="category">
+                  <span>Kategori 7</span>
+                </div>
+                <div className="category">
+                  <span>Kategori 8</span>
+                </div>
+              </div>              
             </div>
+            <ImageGallery  items={images} showThumbnails={true} />
           </div>
         </main>
         <Footer />
