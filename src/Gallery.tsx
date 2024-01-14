@@ -4,14 +4,24 @@ import Header from "./Components/header";
 import ImageGallery from "react-image-gallery";
 import sadFox from "./assets/taxidermy.png"
 
+
+
 // const fs = require('fs'); 
 // fs.readdir("./assets/old_shit",(err, files)=>console.log(files)){}
 
 const images = [{original:sadFox, thumbnail:""},{original:sadFox, thumbnail:sadFox},{original:sadFox, thumbnail:sadFox}];
 
+const modules = import.meta.glob('./assets/old_shit/*.png', { eager: true, as:"raw", });
+
+for(let i in modules){
+  console.log(i);
+  images.push({original:"src/" + i, thumbnail: "src/" + i})
+}
+
 class Gallery extends React.Component {
   constructor(props: any) {
     super(props);
+    //console.log(modules);
   }
   
   render() {
