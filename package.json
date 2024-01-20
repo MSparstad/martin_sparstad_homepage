@@ -2,9 +2,9 @@
   "name": "react-app",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "homepage": "https://{username}.github.io/{repo-name}/",
   "scripts": {
+    "start": "node server",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
