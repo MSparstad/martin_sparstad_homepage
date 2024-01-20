@@ -5,9 +5,8 @@
 //import path from "node:path";
 
 const http = require("http");
-const fs =require("fs");
+const fs = require("fs");
 const path = require("path")
-const src = require("src");
 
 
 
@@ -15,7 +14,7 @@ const src = require("src");
 let entry_file = "";
 const base_path = __dirname;
 
-console.log(src);
+console.log(base_path);
 
 const mimeTypes = {
     '.html': 'text/html',
@@ -40,56 +39,73 @@ const getContentType = (url) => {
     }
     return contentType;
 }
-
+fs.readFile("./index.html", { encoding: "utf-8" }, (err, html) => { if (err) { } else { entry_file = html; console.log(); } });
 //console.log(entry_file);
+console.log("attempting start");
 var server = http.createServer(function (req, res) {
+    let method = req.method, url = req.url, headers = req.headers;
+    console.log("request start: " + method + " " + url + " " + Math.random());
 
-    fs.readFile("./index.html", { encoding: "utf-8" }, (err, html) => { if (err) { throw err } else { entry_file = html; console.log(); } });
-    //console.log(entry_file);
-    console.log("attempting start");
-    var method = req.method, url = req.url, headers = req.headers;
+
+
     // if (method === "GET"){
     //     console.log("caught a GET with url: " + url);
     // }
 
     //entry_file.then(console.log(entry_file), console.log("promise failed"))
     //console.log(method + " " + url);
-    if (method === "GET" && url === "/") {
-        console.log("caught a GET with url: " + url);
-        res.writeHead(200, { 'Content-Type': 'text/html' })
-        //res.statusCode = 200;
-        res.write(entry_file)
-        res.end("bye");
-    }
-    else if (method === "GET") {
-        let true_path = path.join(base_path, url); 
-        console.log(true_path);
-        fs.access(true_path, (err) => {
-            console.log(err ? true_path + " doesn't exist " + err : true_path + " exists");
-            if (!err) {
-                fs.readFile(true_path, { encoding: "utf-8" }, (err, data) => {
+    // if (method === "GET" && url === "/") {
+    //     console.log("caught a GET with url: " + url);
+    //     res.writeHead(200, { 'Content-Type': 'text/html' })
+    //     //res.statusCode = 200;
+    //     res.write(entry_file)
+    //     res.end("bye");
+    // }
+    if (method === "GET") {
+        let true_path = path.join(base_path, url);
+        if (url === "/") {
+            console.log("caught a GET with url: " + url);
+            res.writeHead(200, { 'Content-Type': 'text/html' })
+            //res.statusCode = 200;
+            res.write(entry_file)
+            res.end("bye");
+            return;
+
+        }
+        console.log("true path: " + true_path);
+        fs.access(true_path, (err01) => {
+            console.log(err01 ? true_path + " doesn't exist " + err01 : true_path + " exists");
+            if (!err01) {
+                console.log("err01" + err01);
+                let fileread = fs.readFile(true_path, { encoding: "utf-8" }, (err, data) => {
+                    console.log("err " + err);
                     if (err) {
-                        //throw err
                     }
                     else {
                         const contentType = getContentType(true_path);
-                        res.setHeader("Content-Type", contentType);
 
-                        res.write(data);
-                        console.log("wrote " + true_path + " to response");
+                        // res.setHeader("Content-Type", contentType);
+                        // res.setHeader("Status Code", 200);
+                        res.writeHead(200, { 'Content-Type': contentType })
+                        try { console.log(res.getHeader()) } catch (error) { console.log("header print error") };
+
+                        console.log("data length: " + data.length);
+                        res.write(data,()=>{console.log("wrote " + true_path + " to response"); res.end()});
+                        
+                        //console.log("ending response");
+                        //res.end("server82");
                     }
                 });
+                
             }
-            res.end;
-        })
-
-    }
-    else {
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end('uncaught get');
+            //console.log("fileread: " + fileread);
+        });
+        //fileread.then = function(){console.log("I am the end of a promise!!!!!")};
+        
+        console.log("server88");
     }
 
-    //console.log("server started " + this.url);
+    console.log("end of request");
 });
 
 server.listen(8080);
