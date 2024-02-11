@@ -1,12 +1,13 @@
 // rollup.config.js
 import typescript from '@rollup/plugin-typescript';
-import svgr from "vite-plugin-svgr";
+import { defineConfig } from 'rollup';
 
 export default {
-  input: 'src/main.tsx',
+  input: ['tmp/src/main.js'],
   output: {
-    dir: 'output',
+    dir: 'dist',
     format: 'cjs'
   },
-  plugins: [typescript(), svgr()]
+  plugins: [typescript()]
+  
 };

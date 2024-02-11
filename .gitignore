@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 #compiled down js files
 compiled_ts
+tmp
+dist

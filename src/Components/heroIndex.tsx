@@ -1,3 +1,5 @@
+import React from "react";
+
 function HeroIndex() {
   return (
     <header className="hero index">

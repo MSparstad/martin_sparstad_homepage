@@ -2,6 +2,7 @@ import React from "react";
 import Footer from "./Components/footer";
 import Header from "./Components/header";
 import ImageGallery from "react-image-gallery";
+import img_server from "../img_server.js"
 import sadFox from "./assets/taxidermy.png"
 
 
@@ -11,7 +12,8 @@ import sadFox from "./assets/taxidermy.png"
 
 const images = [{original:sadFox, thumbnail:""},{original:sadFox, thumbnail:sadFox},{original:sadFox, thumbnail:sadFox}];
 
-const modules = import.meta.glob('./assets/old_shit/*.png', { eager: true, as:"raw", });
+const modules = img_server.image_folder;
+//const modules = import.meta.glob('./assets/old_shit/*.png', { eager: true, as:"raw", });
 
 for(let i in modules){
   console.log(i);
