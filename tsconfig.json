@@ -16,7 +16,7 @@
     "isolatedModules": true,
     "noEmit": false,
     "jsx": "react-jsx",
-    "outDir": "./compiled_ts",    
+    "outDir": "./dist",    
   },
   "include": ["src", "vite-env.d.ts"],
   "references": [{ "path": "./tsconfig.node.json" }],
