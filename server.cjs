@@ -12,7 +12,7 @@ const path = require("path")
 
 //import main from "index.html";
 let entry_file = "";
-const base_path = __dirname;
+const base_path = "dist";
 
 console.log(base_path);
 
@@ -62,9 +62,16 @@ var server = http.createServer(function (req, res) {
     //     res.end("bye");
     // }
     if (method === "GET") {
-        let true_path = path.join(base_path, url);
+        let true_path;
+        if(/dist/.test(url)){
+            true_path = path.join("", url);
+        }
+        else {
+            true_path = path.join(base_path, url);
+        }
+        console.log("caught a GET with url: " + url);
         if (url === "/") {
-            console.log("caught a GET with url: " + url);
+            
             res.writeHead(200, { 'Content-Type': 'text/html' })
             //res.statusCode = 200;
             res.write(entry_file)

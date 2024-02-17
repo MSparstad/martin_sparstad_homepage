@@ -1,5 +1,4 @@
-import React from "react";
-import Theme_Toggle from "../assets/theme_toggle_03.svg?react";
+import Theme_Toggle from "../assets/theme_toggle_03.svg";
 
 function Theme() {
   return (

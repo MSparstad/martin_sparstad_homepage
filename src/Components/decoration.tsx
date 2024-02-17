@@ -1,4 +1,3 @@
-import React from "react";
 import hero_img_url from "../assets/shaded_shapes.png"
 
 function Decoration() {

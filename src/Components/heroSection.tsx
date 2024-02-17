@@ -1,4 +1,3 @@
-import React from "react";
 import Decoration from "./decoration";
 import HeroIndex from "./heroIndex";
 
