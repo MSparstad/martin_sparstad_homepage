@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server",
-    "dev": "node server.js",
+    "dev": "node server.cjs",
     "build": "rimraf tmp && npx tsc",
     "img_test": "node img_server.js",
     "typescript-compile": "rimraf dist && tsc",
