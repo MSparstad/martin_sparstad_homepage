@@ -22,6 +22,7 @@ const mimeTypes = {
     '.png': 'image/png',
     '.ico': 'image/x-icon',
     '.json': 'application/json',
+    '.svg': 'image/svg+xml',
 };
 
 const getContentType = (url) => {
@@ -37,48 +38,48 @@ const getContentType = (url) => {
     return contentType;
 }
 
-const testFileAccess = (path) => {
-    fs.access(path, (error) => {
-        if (error) {
-            console.log(`$path is not accessible`);
-            return false;
-        }
-        else {
-            return true;
-        }
-    })
-}
+const testFileAccess = (filepath) => {
 
-const createFileStream = async (path, fileEncoding = "utf-8") => {
-    const fileContent = await new Promise((resolve, reject) => {
+    const absolute_path = path.join(__dirname, filepath);
+    //console.log(`ACCESS TEST; normalized_path: ${absolute_path}`);
+    let accessible;
+    try {
+        fs.accessSync(absolute_path)
+        accessible = true;
+    }
+    catch (err) {
+        accessible = false;
+        console.log(err);
+    }
+    return accessible;
+}
+// console.log(testFileAccess("C:\\base\\work\\webdev-projects\\martin_sparstad_homepage\\dist\\main.js") + " banana");
+
+const createFileStream = (path, fileEncoding = "utf-8") => {
+    return (new Promise((resolve, reject) => {
         let result = "";
         fs.createReadStream(path, { encoding: fileEncoding })
             .on("open", () => {
-                console.log(`Reading from ${path}`);
+                console.log(`Function; Reading from ${path} with encoding ${fileEncoding}`);
             })
             .on("data", (chunk) => {
                 result += chunk;
-                console.log("chunk added");
+                //console.log("chunk added");
             })
             .on("end", () => {
-                console.log(result);
+                console.log(`promise resolved for ${path}`);
                 resolve(result);
 
             })
-            .on("error", error => reject(error));
-
-            
-    })
-    .then((data) => { 
-        return data;       
-    })
+            .on("error", error => {
+                console.log(error);
+                reject(error)
+            });
+    }))
 }
-
-let myfile = createFileStream("./index.html").then((data)=>{
-    const txt = data;
-    console.log(txt + " Hi");
-}).then(() => console.log(myfile + " js promises suck"));
-
+const promistStart = performance.now();
+const mypromise = createFileStream("./index.html");
+mypromise.then((data) => { return console.log("This promise has finished " + (performance.now() - promistStart)) });
 
 fs.readFile("./index.html", { encoding: "utf-8" }, (err, html) => { if (err) { } else { entry_file = html; console.log(); } });
 //console.log(entry_file);
@@ -86,73 +87,89 @@ fs.readFile("./index.html", { encoding: "utf-8" }, (err, html) => { if (err) { }
 let entry_file = "";
 const base_path = "./dist";
 
-console.log(base_path);
+
+console.log(`BASE PATH: ${base_path} __dirname: ${__dirname}`);
+
 
 function get_handler(req, res) {
     let method = req.method, url = req.url, headers = req.headers;
-    console.log("request start: " + method + " " + url);
+    let true_path = path.join(__dirname, url);
+    const contentType = getContentType(true_path);
+    const path_accesible = testFileAccess(url);
 
-    if (method === "GET") {
-        if (url === "/") {
 
+    console.log("Main Loop;  request start: " + method + " " + url);
+    console.log(`Main Loop;  true path: ${true_path}, accessible: ${path_accesible}`);
+
+
+    if (method == "GET") {
+
+        if (url == "/") {
             res.setHeader("contentType", "text/html")
             //res.statusCode = 200;
             res.write(entry_file)
-            res.end("bye");
-            return;
+            res.end();
         }
-        let true_path;
-        if (/dist/.test(url)) {
-            //true_path = path.join("", url);
-            true_path = path.join(__dirname, url);
-        }
-        else if (/favico/.test(url)) {
-            console.log("got rid of favico")
-            true_path = "./dist/e665b3312091b32d.png";
-            res.end()
-            return;
-        }
-        else {
-            true_path = path.join(base_path, url);
-        }
-        console.log("caught a GET with url: " + url);
-        console.log("true path: " + true_path);
+        // else if (/dist/.test(url)) {
+        //     //true_path = path.join("", url);
+        //     //true_path = path.join(__dirname, url);
+        // }
+        // else if (/favico/.test(url)) {
+        //     console.log("Main Loop; got rid of favico")
+        //     true_path = "./dist/e665b3312091b32d.png";
+        //     res.end()
+        // }
+        else if (path_accesible) {
+            console.log("Main Loop; caught a GET with url: " + url);
+            console.log("Main Loop; true path: " + true_path);
+
+            console.log(`Main Loop; path accessible return: ${path_accesible}`);
 
 
-        if (testFileAccess(true_path)) {
 
-            const contentType = getContentType(true_path);
-            res.setHeader("Status Code", 200)
-            res.setHeader("Content-Type", getContentType(url));
-            // let filestream = fs.createReadStream(true_path, { encoding: "utf-8" }, (err, data) => {
+            console.log(`Main Loop; Content type return : ${contentType}`);
 
-             myfile = createFileStream(true_path).then((data) => {
-                console.log("data incoming");
-                res.end(data, () => {
-                    console.log("wrote " + true_path + " to response");
-                });
-            });
+            res.setHeader("StatusCode", 200)
+            res.setHeader("Content-Type", contentType);
 
 
-            try { console.log(res.getHeader()) } catch (error) { console.log("header print error " + error) };
+            let readFilePromise = createFileStream(true_path);
+            readFilePromise.then((data) => {
+                console.log(`Main Loop; sending file: ${true_path}`);
+                res.end(data);
+            })
 
-            // console.log("data length: " + data.length);
-
-
+            try {
+                console.log(res.getHeaders())
+            }
+            catch (error) {
+                console.log("header print error " + error)
+            };
             //console.log("ending response");
             //res.end("server82");
+        }
+        else {
+            res.setHeader("StatusCode", 500)
+            res.end();
+            console.log(`can't access ${true_path}`)
         };
-
         //fileread.then = function(){console.log("I am the end of a promise!!!!!")};
+    }
+    else {
+        console.log("caught a non GET request");
     }
 
 
 }
 
-var server = http.createServer(function (req, res) {
-    get_handler(req, res);
-});
+// var server = http.createServer(function (req, res) {
+//     get_handler(req, res);
+// });
 
+var server = http.createServer();
+server.on("request", (req, res) => {
+    get_handler(req, res);
+})
 server.listen(8080);
 
 //closing server and exiting program after specified milliseconds for testing
