@@ -40,39 +40,58 @@ const getContentType = (url) => {
 
 const testFileAccess = (filepath) => {
 
-    const absolute_path = path.join(__dirname, filepath);
+    // const dir_regex = new RegExp(`${__dirname}`);
+    // console.log("my regex: " + dir_regex + " test: " + dir_regex.test(filepath) + " for " +  filepath);
+    const is_absolute_path = filepath.includes(__dirname) && filepath.includes("dist");
+
+    console.log(`TEST ACCESS: Test path is absolute : ${filepath.includes(__dirname)}`);
+
+    const absolute_path = path.join((path.join(__dirname, "\\dist")), filepath);
+    console.log(`TEST ACCESS: constructed true path: ${absolute_path}`);
     //console.log(`ACCESS TEST; normalized_path: ${absolute_path}`);
     let accessible;
-    try {
-        fs.accessSync(absolute_path)
-        accessible = true;
+    if (is_absolute_path) {
+        try {
+            fs.accessSync(filepath);
+            accessible = true;
+        }
+        catch (err) {
+            accessible = false;
+            console.log(err);
+        }
     }
-    catch (err) {
-        accessible = false;
-        console.log(err);
+    else {
+        try {
+            fs.accessSync(absolute_path)
+            accessible = true;
+        }
+        catch (err) {
+            accessible = false;
+            console.log(err);
+        }
     }
     return accessible;
 }
 // console.log(testFileAccess("C:\\base\\work\\webdev-projects\\martin_sparstad_homepage\\dist\\main.js") + " banana");
 
-const createFileStream = (path, fileEncoding = "utf-8") => {
+const createFileStream = (path, fileEncoding = null) => {
     return (new Promise((resolve, reject) => {
         let result = "";
         fs.createReadStream(path, { encoding: fileEncoding })
             .on("open", () => {
-                console.log(`Function; Reading from ${path} with encoding ${fileEncoding}`);
+                console.log(`FILE STREAM: Function; Reading from ${path} with encoding ${fileEncoding}`);
             })
             .on("data", (chunk) => {
                 result += chunk;
                 //console.log("chunk added");
             })
             .on("end", () => {
-                console.log(`promise resolved for ${path}`);
+                console.log(`FILE STREAM: promise resolved for ${path}`);
                 resolve(result);
 
             })
             .on("error", error => {
-                console.log(error);
+                console.log("FILE STREAM: " + error);
                 reject(error)
             });
     }))
@@ -93,12 +112,20 @@ console.log(`BASE PATH: ${base_path} __dirname: ${__dirname}`);
 
 function get_handler(req, res) {
     let method = req.method, url = req.url, headers = req.headers;
-    let true_path = path.join(__dirname, url);
-    const contentType = getContentType(true_path);
-    const path_accesible = testFileAccess(url);
-
-
     console.log("Main Loop;  request start: " + method + " " + url);
+
+    let true_path;
+    if (/dist/.test(url)) {
+        true_path = path.join(__dirname, url);
+    }
+    else {
+        true_path = path.join((path.join(__dirname, "\\dist")), url);
+    }
+    const contentType = getContentType(true_path);
+    const path_accesible = testFileAccess(true_path);
+
+
+
     console.log(`Main Loop;  true path: ${true_path}, accessible: ${path_accesible}`);
 
 
@@ -131,6 +158,10 @@ function get_handler(req, res) {
 
             res.setHeader("StatusCode", 200)
             res.setHeader("Content-Type", contentType);
+            
+            if(true_path.includes("png")){
+                res.setHeader("Content-Encoding", "gzip");
+            }
 
 
             let readFilePromise = createFileStream(true_path);
@@ -158,8 +189,6 @@ function get_handler(req, res) {
     else {
         console.log("caught a non GET request");
     }
-
-
 }
 
 // var server = http.createServer(function (req, res) {
@@ -168,6 +197,7 @@ function get_handler(req, res) {
 
 var server = http.createServer();
 server.on("request", (req, res) => {
+    console.log("Request recieved!");
     get_handler(req, res);
 })
 server.listen(8080);
