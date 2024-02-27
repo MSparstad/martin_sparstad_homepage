@@ -16,6 +16,7 @@ const path = require("path")
 const mimeTypes = {
     '.html': 'text/html',
     '.jgp': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
     '.css': 'text/css',
     '.js': 'text/javascript',
     '.tsx': 'text/javascript',
@@ -74,20 +75,29 @@ const testFileAccess = (filepath) => {
 }
 // console.log(testFileAccess("C:\\base\\work\\webdev-projects\\martin_sparstad_homepage\\dist\\main.js") + " banana");
 
-const createFileStream = (path, fileEncoding = null) => {
+const createFileStream = (filepath, fileEncoding = null) => {
     return (new Promise((resolve, reject) => {
-        let result = "";
-        fs.createReadStream(path, { encoding: fileEncoding })
+        // if(path.extname(filepath) == '.png') {
+        //     fileEncoding = "binary"
+        //     console.log(`FILE STREAM: setting png encoding`);
+            
+        // }
+        let result = [];
+        fs.createReadStream(filepath, { encoding: fileEncoding })
             .on("open", () => {
-                console.log(`FILE STREAM: Function; Reading from ${path} with encoding ${fileEncoding}`);
+                console.log(`FILE STREAM: Function; Reading from ${filepath} with encoding ${fileEncoding}`);
             })
             .on("data", (chunk) => {
-                result += chunk;
+                result.push(chunk);
                 //console.log("chunk added");
             })
             .on("end", () => {
-                console.log(`FILE STREAM: promise resolved for ${path}`);
-                resolve(result);
+                console.log(`FILE STREAM: promise resolved for ${filepath}`);
+                if(path.extname(filepath) == '.png') {
+                    // console.log("FILE STREAM: PNG data " + result);
+                }
+                let concat_result = Buffer.concat(result)
+                resolve(concat_result);
 
             })
             .on("error", error => {
@@ -97,10 +107,10 @@ const createFileStream = (path, fileEncoding = null) => {
     }))
 }
 const promistStart = performance.now();
-const mypromise = createFileStream("./index.html");
-mypromise.then((data) => { return console.log("This promise has finished " + (performance.now() - promistStart)) });
+const mypromise = createFileStream("./dist/tempname.png");
+mypromise.then((data) => { console.log("This promise has finished " + (performance.now() - promistStart) + " png data: " + data.toString().substring(0,500))});
 
-fs.readFile("./index.html", { encoding: "utf-8" }, (err, html) => { if (err) { } else { entry_file = html; console.log(); } });
+fs.readFile("./index.html", { encoding: "utf8" }, (err, html) => { if (err) { } else { entry_file = html; console.log(); } });
 //console.log(entry_file);
 
 let entry_file = "";
@@ -132,7 +142,7 @@ function get_handler(req, res) {
     if (method == "GET") {
 
         if (url == "/") {
-            res.setHeader("contentType", "text/html")
+            res.setHeader("Content-Type", "text/html")
             //res.statusCode = 200;
             res.write(entry_file)
             res.end();
@@ -146,6 +156,20 @@ function get_handler(req, res) {
         //     true_path = "./dist/e665b3312091b32d.png";
         //     res.end()
         // }
+
+        // else if(url == "/e665b3312091b32d.png"){
+        //     res.writeHead(200, {
+        //         "Content-Type": contentType
+        //     });
+     
+        //     // Reading the file
+        //     fs.readFile(true_path,
+        //         function (err, content) {
+        //             // Serving the image
+        //             res.end(content);
+        //         });
+        // }
+
         else if (path_accesible) {
             console.log("Main Loop; caught a GET with url: " + url);
             console.log("Main Loop; true path: " + true_path);
@@ -156,31 +180,50 @@ function get_handler(req, res) {
 
             console.log(`Main Loop; Content type return : ${contentType}`);
 
-            res.setHeader("StatusCode", 200)
-            res.setHeader("Content-Type", contentType);
+            // res.setHeader("StatusCode", 200)
+            res.statusCode = 200;
+            // res.setHeader("Content-Encoding", "utf-8");
             
-            if(true_path.includes("png")){
-                res.setHeader("Content-Encoding", "gzip");
-            }
+            res.setHeader("Content-Type", contentType);
+            // if(contentType == "image/png"){
+            //     res.setHeader("Content-Encoding", "utf-8");
+            // }
+            // if(true_path.includes("png")){
+            //     res.setHeader("Content-Encoding", "chunk");
+            // }
 
 
             let readFilePromise = createFileStream(true_path);
             readFilePromise.then((data) => {
-                console.log(`Main Loop; sending file: ${true_path}`);
-                res.end(data);
-            })
+                console.log(`Main Loop; sending file: ${true_path}, data length: ${data.length}, bufferBytelength data: ${Buffer.byteLength(data)}`);
+                res.setHeader("Content-Length", Buffer.byteLength(data));
+                res.write(data,() => {
+                    console.log("Main Loop; chunk print " + data.slice(0, 500));
+                });
+                res.end();
+                console.log("Main Loop; Sent file" + "Content-Length" + data.length);
+
+                let headers = res.getHeaders();
+            
 
             try {
-                console.log(res.getHeaders())
+                console.log("Main Loop; headers");
+                for(const key in headers) {
+                    console.log(`${key}: ${headers[key]}`);
+                };
             }
             catch (error) {
                 console.log("header print error " + error)
             };
+            });
+
+            
             //console.log("ending response");
             //res.end("server82");
         }
         else {
-            res.setHeader("StatusCode", 500)
+            // res.setHeader("StatusCode", 500)
+            res.statusCode = 404;
             res.end();
             console.log(`can't access ${true_path}`)
         };
