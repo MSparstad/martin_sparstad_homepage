@@ -7,12 +7,14 @@ import babel from "@rollup/plugin-babel";
 import path from "node:path";
 import nodePolyFills from "rollup-plugin-polyfill-node";
 import svg from "rollup-plugin-svg";
+import globImport from 'rollup-plugin-glob-import';
 import { defineConfig } from 'rollup';
 
 export default {
   input: ['tmp/main.js'],
   output: {
     dir: 'dist',
+    // preserveModules: 'true',
     format: 'iife',
     paths: {
       'react/jsx-runtime': path.resolve(
@@ -21,6 +23,9 @@ export default {
   }
 },
   plugins: [
+
+    globImport(),
+
     nodeResolve({
       extensions: ['.js', '.jsx'],
       
@@ -36,10 +41,6 @@ export default {
       
     commonjs(),
 
-    
-      
-    
-    
     pluginurl(),
 
     nodePolyFills(),

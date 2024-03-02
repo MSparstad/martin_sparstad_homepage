@@ -198,7 +198,7 @@ function get_handler(req, res) {
                 console.log(`Main Loop; sending file: ${true_path}, data length: ${data.length}, bufferBytelength data: ${Buffer.byteLength(data)}`);
                 res.setHeader("Content-Length", Buffer.byteLength(data));
                 res.write(data,() => {
-                    console.log("Main Loop; chunk print " + data.slice(0, 500));
+                    // console.log("Main Loop; chunk print " + data.slice(0, 500));
                 });
                 res.end();
                 console.log("Main Loop; Sent file" + "Content-Length" + data.length);
