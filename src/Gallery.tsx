@@ -17,7 +17,7 @@ const images = [{original:sadFox, thumbnail:""},{original:sadFox, thumbnail:sadF
 
 for(let i in images){
   // console.log(i);
-  images.push({original:"src/" + i, thumbnail: "src/" + i})
+  images.push({original: images[i].original, thumbnail: images[i].original})
 }
 
 class Gallery extends React.Component {

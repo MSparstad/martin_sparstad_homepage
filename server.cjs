@@ -9,8 +9,42 @@ const fs = require("fs");
 const path = require("path")
 
 
+const routes = ["/", "/music", "/gallery", "/diverse", "/comingsoon"];
 
-//import main from "index.html";
+function file_crawl(path, paths = []) {
+    console.log(`Hello `);
+    let current_paths = [];
+    fs.readdir((path), (err, files) => {
+        if(err){
+            console.log(err);
+        }
+        current_paths = files;
+        console.log(`current_paths ${current_paths}`);
+
+        current_paths.forEach((item) => {
+            console.log(`item: ${item}`)
+            let item_stats;
+            fs.stat(item, (err, stats)=> {
+                item_stats = stats;
+            });
+            console.log(`item stats: ${item_stats}`);
+            if(item_stats.isFile()) {
+                paths += item;
+                console.log(`item is file: ${item_stats.isFile()}`);
+            }
+            else if(item_stats.isDirectory()) {
+                console.log(`item is dir: ${item_stats.isDirectory()}`);
+                file_crawl(item, paths);
+            }
+        });
+    });
+       
+
+
+    return paths;
+}
+
+console.log(fs.readdirSync("./dist", {recursive: true}));
 
 
 const mimeTypes = {
@@ -107,8 +141,10 @@ const createFileStream = (filepath, fileEncoding = null) => {
     }))
 }
 const promistStart = performance.now();
-const mypromise = createFileStream("./dist/tempname.png");
-mypromise.then((data) => { console.log("This promise has finished " + (performance.now() - promistStart) + " png data: " + data.toString().substring(0,500))});
+
+//
+// const mypromise = createFileStream("./dist/tempname.png");
+// mypromise.then((data) => { console.log("This promise has finished " + (performance.now() - promistStart) + " png data: " + data.toString().substring(0,500))});
 
 fs.readFile("./index.html", { encoding: "utf8" }, (err, html) => { if (err) { } else { entry_file = html; console.log(); } });
 //console.log(entry_file);
@@ -141,7 +177,7 @@ function get_handler(req, res) {
 
     if (method == "GET") {
 
-        if (url == "/") {
+        if (routes.includes(url.toLowerCase())) {
             res.setHeader("Content-Type", "text/html")
             //res.statusCode = 200;
             res.write(entry_file)

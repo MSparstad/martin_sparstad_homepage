@@ -8,6 +8,8 @@ import path from "node:path";
 import nodePolyFills from "rollup-plugin-polyfill-node";
 import svg from "rollup-plugin-svg";
 import globImport from 'rollup-plugin-glob-import';
+import css from 'rollup-plugin-css-only'
+import images from '@rollup/plugin-image'
 import { defineConfig } from 'rollup';
 
 export default {
@@ -20,7 +22,8 @@ export default {
       'react/jsx-runtime': path.resolve(
         '../../node_modules/react/jsx-runtime.js'
       )
-  }
+  },
+  assetFileNames: 'assets/[name][extname]',
 },
   plugins: [
 
@@ -44,8 +47,14 @@ export default {
     pluginurl(),
 
     nodePolyFills(),
-    
+
+    images(),
+
     svg(),
+    
+    css({
+      output: 'main.css',
+    }),
   ],
-  external: [/\.css$/],
+  // external: [/\.css$/],
 };

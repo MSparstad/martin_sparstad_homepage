@@ -15,7 +15,7 @@ class LinkBar extends React.Component {
       musicLink = <Link to={"/music"}>Music</Link>
       // galleryLink = <a className="nav-link" href={`/Gallery`}>Galleri</a>
       galleryLink = <Link to={"/Gallery"}>Gallery</Link>
-      miscLink = <a className="nav-link" href={`/Gallery`}>Diverse</a>
+      miscLink = <a className="nav-link" href={`/comingSoon`}>Diverse</a>
     }
     else {
       // musicLink = <a className="nav-link" href={`/ComingSoon`}>Musikk</a>
