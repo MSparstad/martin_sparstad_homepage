@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React from "react";
 import Logoimg from "./logo";
 import LinkBar from "./linkBar";

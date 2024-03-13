@@ -10,41 +10,70 @@ const path = require("path")
 
 
 const routes = ["/", "/music", "/gallery", "/diverse", "/comingsoon"];
+const base_path = "dist";
+const all_files = file_crawl("./dist", []);
 
-function file_crawl(path, paths = []) {
-    console.log(`Hello `);
+let entry_file = "";
+
+//Recurse through all files in give folderstructure
+//
+function file_crawl(path, paths) {
+    console.log(`crawling files `);
     let current_paths = [];
-    fs.readdir((path), (err, files) => {
-        if(err){
-            console.log(err);
+    let current_files = [];
+
+    let files = fs.readdirSync(path)
+
+    current_paths = files;
+    // console.log(`current_paths ${current_paths}`);
+
+    current_paths.forEach((item) => {        
+        // console.log(`item: ${item}`)
+        let full_path =  (path + "/" + item);
+        let item_stats = fs.lstatSync(full_path);
+        
+
+        // console.log(`item stats: ${item_stats}`);
+        if (item_stats.isFile()) {
+            current_files.push(full_path);
+            // console.log(`${item} is file: ${item_stats.isFile()}`);
+            // console.log("paths after push: "+ paths);
         }
-        current_paths = files;
-        console.log(`current_paths ${current_paths}`);
-
-        current_paths.forEach((item) => {
-            console.log(`item: ${item}`)
-            let item_stats;
-            fs.stat(item, (err, stats)=> {
-                item_stats = stats;
-            });
-            console.log(`item stats: ${item_stats}`);
-            if(item_stats.isFile()) {
-                paths += item;
-                console.log(`item is file: ${item_stats.isFile()}`);
-            }
-            else if(item_stats.isDirectory()) {
-                console.log(`item is dir: ${item_stats.isDirectory()}`);
-                file_crawl(item, paths);
-            }
-        });
+        // else if (item_stats.isDirectory()) {
+        //     // console.log(`${item} is dir: ${item_stats.isDirectory()}`);
+        //     console.log(`recursing to  ${full_path}, current results: ${paths}`);
+        //     paths.push(file_crawl((path + "/" + item), paths));
+        //     console.log("after recursion " + paths);
+        // }
     });
-       
+    paths.push(path);
+    
+        paths.push(current_files);
+    
+    // console.log(current_files)
+    current_paths.forEach((item) => {
+        let full_path =  (path + "/" + item);
+        let item_stats = fs.lstatSync(full_path);
+        
+        if (item_stats.isDirectory()) {
+            //     // console.log(`${item} is dir: ${item_stats.isDirectory()}`);
+            //     console.log(`recursing to  ${full_path}, current results: ${paths}`);
+                console.log("recursing on " + full_path);
+                paths.push(file_crawl(full_path, []));
+                
+        }
 
+    });
 
+    console.log("New return: ");
+    console.log(paths);
     return paths;
 }
 
-console.log(fs.readdirSync("./dist", {recursive: true}));
+console.table(`----------------------------------------------------------- \n`);
+console.log(all_files);
+
+// console.log(fs.readdirSync("./dist", {recursive: true}));
 
 
 const mimeTypes = {
@@ -77,11 +106,11 @@ const testFileAccess = (filepath) => {
 
     // const dir_regex = new RegExp(`${__dirname}`);
     // console.log("my regex: " + dir_regex + " test: " + dir_regex.test(filepath) + " for " +  filepath);
-    const is_absolute_path = filepath.includes(__dirname) && filepath.includes("dist");
+    const is_absolute_path = filepath.includes(__dirname) && filepath.includes(base_path);
 
     console.log(`TEST ACCESS: Test path is absolute : ${filepath.includes(__dirname)}`);
 
-    const absolute_path = path.join((path.join(__dirname, "\\dist")), filepath);
+    const absolute_path = path.join((path.join(__dirname, `\\/${base_path}`)), filepath);
     console.log(`TEST ACCESS: constructed true path: ${absolute_path}`);
     //console.log(`ACCESS TEST; normalized_path: ${absolute_path}`);
     let accessible;
@@ -114,7 +143,7 @@ const createFileStream = (filepath, fileEncoding = null) => {
         // if(path.extname(filepath) == '.png') {
         //     fileEncoding = "binary"
         //     console.log(`FILE STREAM: setting png encoding`);
-            
+
         // }
         let result = [];
         fs.createReadStream(filepath, { encoding: fileEncoding })
@@ -127,7 +156,7 @@ const createFileStream = (filepath, fileEncoding = null) => {
             })
             .on("end", () => {
                 console.log(`FILE STREAM: promise resolved for ${filepath}`);
-                if(path.extname(filepath) == '.png') {
+                if (path.extname(filepath) == '.png') {
                     // console.log("FILE STREAM: PNG data " + result);
                 }
                 let concat_result = Buffer.concat(result)
@@ -146,11 +175,13 @@ const promistStart = performance.now();
 // const mypromise = createFileStream("./dist/tempname.png");
 // mypromise.then((data) => { console.log("This promise has finished " + (performance.now() - promistStart) + " png data: " + data.toString().substring(0,500))});
 
+
+
 fs.readFile("./index.html", { encoding: "utf8" }, (err, html) => { if (err) { } else { entry_file = html; console.log(); } });
 //console.log(entry_file);
 
-let entry_file = "";
-const base_path = "./dist";
+
+
 
 
 console.log(`BASE PATH: ${base_path} __dirname: ${__dirname}`);
@@ -161,11 +192,13 @@ function get_handler(req, res) {
     console.log("Main Loop;  request start: " + method + " " + url);
 
     let true_path;
-    if (/dist/.test(url)) {
+    const basepath_regex = new RegExp(base_path)
+
+    if (basepath_regex.test(url)) {
         true_path = path.join(__dirname, url);
     }
     else {
-        true_path = path.join((path.join(__dirname, "\\dist")), url);
+        true_path = path.join((path.join(__dirname, `\\${base_path}`)), url);
     }
     const contentType = getContentType(true_path);
     const path_accesible = testFileAccess(true_path);
@@ -197,7 +230,7 @@ function get_handler(req, res) {
         //     res.writeHead(200, {
         //         "Content-Type": contentType
         //     });
-     
+
         //     // Reading the file
         //     fs.readFile(true_path,
         //         function (err, content) {
@@ -219,7 +252,7 @@ function get_handler(req, res) {
             // res.setHeader("StatusCode", 200)
             res.statusCode = 200;
             // res.setHeader("Content-Encoding", "utf-8");
-            
+
             res.setHeader("Content-Type", contentType);
             // if(contentType == "image/png"){
             //     res.setHeader("Content-Encoding", "utf-8");
@@ -233,27 +266,27 @@ function get_handler(req, res) {
             readFilePromise.then((data) => {
                 console.log(`Main Loop; sending file: ${true_path}, data length: ${data.length}, bufferBytelength data: ${Buffer.byteLength(data)}`);
                 res.setHeader("Content-Length", Buffer.byteLength(data));
-                res.write(data,() => {
+                res.write(data, () => {
                     // console.log("Main Loop; chunk print " + data.slice(0, 500));
                 });
                 res.end();
                 console.log("Main Loop; Sent file" + "Content-Length" + data.length);
 
                 let headers = res.getHeaders();
-            
 
-            try {
-                console.log("Main Loop; headers");
-                for(const key in headers) {
-                    console.log(`${key}: ${headers[key]}`);
+
+                try {
+                    console.log("Main Loop; headers");
+                    for (const key in headers) {
+                        console.log(`${key}: ${headers[key]}`);
+                    };
+                }
+                catch (error) {
+                    console.log("header print error " + error)
                 };
-            }
-            catch (error) {
-                console.log("header print error " + error)
-            };
             });
 
-            
+
             //console.log("ending response");
             //res.end("server82");
         }
@@ -276,7 +309,7 @@ function get_handler(req, res) {
 
 var server = http.createServer();
 server.on("request", (req, res) => {
-    console.log("Request recieved!");
+    // console.log("Request recieved!");
     get_handler(req, res);
 })
 server.listen(8080);

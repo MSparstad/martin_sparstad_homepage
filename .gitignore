@@ -26,3 +26,7 @@ dist-ssr
 compiled_ts
 tmp
 dist
+#Design files
+design_files/*
+#Homebrew test stuff
+no_babel.config.json

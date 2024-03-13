@@ -8,7 +8,7 @@ function Music() {
       <Header />
       <main>
         <div className="container">
-          <audio src="src\assets\Audio\HawaH.wav" preload="" controls>
+          <audio src="./assets/Audio/HawaH.wav" preload="" controls>
             Hawah
           </audio>
         </div>

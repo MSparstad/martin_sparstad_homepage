@@ -10,6 +10,7 @@ import svg from "rollup-plugin-svg";
 import globImport from 'rollup-plugin-glob-import';
 import css from 'rollup-plugin-css-only'
 import images from '@rollup/plugin-image'
+import css_porter from 'rollup-plugin-css-porter';
 import { defineConfig } from 'rollup';
 
 export default {
@@ -18,15 +19,18 @@ export default {
     dir: 'dist',
     // preserveModules: 'true',
     format: 'iife',
+    sourcemap: "true",
     paths: {
       'react/jsx-runtime': path.resolve(
         '../../node_modules/react/jsx-runtime.js'
       )
   },
   assetFileNames: 'assets/[name][extname]',
+  
 },
   plugins: [
 
+    commonjs(),
     globImport(),
 
     nodeResolve({
@@ -41,8 +45,6 @@ export default {
         extensions: ['.js', '.jsx']
 
       }),
-      
-    commonjs(),
 
     pluginurl(),
 

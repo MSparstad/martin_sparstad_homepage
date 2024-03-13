@@ -1,9 +1,10 @@
 import React from "react";
 import Footer from "./Components/footer";
 import Header from "./Components/header";
-import ImageGallery from "react-image-gallery";
-import "react-image-gallery/styles/css/image-gallery.css";
-import sadFox from "./assets/taxidermy.png"
+import ImageGallery from "../node_modules/react-image-gallery/build/image-gallery.js";
+// import "react-image-gallery/styles/css/image-gallery.css";
+import sadFox from "./assets/taxidermy.png";
+// import old_images from "./assets/old_shit/*.png";
 
 
 
@@ -19,6 +20,7 @@ for(let i in images){
   // console.log(i);
   images.push({original: images[i].original, thumbnail: images[i].original})
 }
+// console.log(old_images);
 
 class Gallery extends React.Component {
   constructor(props: any) {
