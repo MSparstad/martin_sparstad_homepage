@@ -15,6 +15,24 @@ const images = [{original:sadFox, thumbnail:""},{original:sadFox, thumbnail:sadF
 
 //const modules = img_server.image_folder;
 //const modules = import.meta.glob('./assets/old_shit/*.png', { eager: true, as:"raw", });
+let test_fetch = fetch("dist/assets/old_shit/Cataclysm_gunstore_massacre.png");
+test_fetch.then((response)=> {
+  console.log("01 promising fetch");
+  if(!response.ok) {
+    console.log("02 " + response.toString());
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  else {
+    console.log("03 ");
+    console.log(response);
+    return response.blob();
+  }
+})
+.then((res3) => {
+  console.log("04 ", res3);
+  let url = URL.createObjectURL(res3);
+  images.push({original: url, thumbnail: url});
+});
 
 for(let i in images){
   // console.log(i);

@@ -8,14 +8,17 @@
   "scripts": {
     "builddev": "npm run build && npm run dev",
     "dev": "node server.cjs",
-    "build": "(npm run typescript-compile && npm run bundle) && npm run copy-assets",
+    "build": "npm run copy-assets && npm run bundle",
     "typescript-compile": "rimraf temp && tsc",
-    "bundle": "rimraf dist && rollup -c",
-    "copy-assets": "powershell -Command Copy-Item -Path src/assets -Destination ./dist -recurse",
+    "bundle": "rollup -c -w",
+    "copy-assets": "powershell -Command Copy-Item -Path src/assets -Destination ./dist -recurse -force",
     "lint": "eslint --cache --ext .ts src/**",
     "format": "prettier --write --cache --parser typescript \"src/**/*.ts\"",
     "prepublishOnly": "npm run build",
-    "deploy": "gh-pages -d dist"
+    "deploy": "gh-pages -d dist",
+
+    
+    "rollup-with-typescript": "rollup -c"
   },
   "dependencies": {
     "core-js": "^3.36.0",
@@ -56,6 +59,7 @@
     "rollup-plugin-css-porter": "^1.0.2",
     "rollup-plugin-glob-import": "^0.5.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
+    "rollup-plugin-styles": "^4.0.0",
     "rollup-plugin-svg": "^2.0.0",
     "typescript": "^4.9.5"
   }

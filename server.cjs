@@ -18,7 +18,7 @@ let entry_file = "";
 //Recurse through all files in give folderstructure
 //
 function file_crawl(path, paths) {
-    console.log(`crawling files `);
+    // console.log(`crawling files `);
     let current_paths = [];
     let current_files = [];
 
@@ -58,15 +58,15 @@ function file_crawl(path, paths) {
         if (item_stats.isDirectory()) {
             //     // console.log(`${item} is dir: ${item_stats.isDirectory()}`);
             //     console.log(`recursing to  ${full_path}, current results: ${paths}`);
-                console.log("recursing on " + full_path);
+                // console.log("recursing on " + full_path);
                 paths.push(file_crawl(full_path, []));
                 
         }
 
     });
 
-    console.log("New return: ");
-    console.log(paths);
+    // console.log("New return: ");
+    // console.log(paths);
     return paths;
 }
 

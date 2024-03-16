@@ -10,11 +10,12 @@ import svg from "rollup-plugin-svg";
 import globImport from 'rollup-plugin-glob-import';
 import css from 'rollup-plugin-css-only'
 import images from '@rollup/plugin-image'
+import styles from "rollup-plugin-styles";
 import css_porter from 'rollup-plugin-css-porter';
 import { defineConfig } from 'rollup';
 
 export default {
-  input: ['tmp/main.js'],
+  input: ['src/main.tsx'],
   output: {
     dir: 'dist',
     // preserveModules: 'true',
@@ -29,8 +30,12 @@ export default {
   
 },
   plugins: [
+    typescript({outDir:"dist/typescript"}),
 
     commonjs(),
+
+    styles(),
+    
     globImport(),
 
     nodeResolve({
@@ -53,10 +58,10 @@ export default {
     images(),
 
     svg(),
-    
-    css({
-      output: 'main.css',
-    }),
+
+    // css({
+    //   output: 'main.css',
+    // }),
   ],
   // external: [/\.css$/],
 };

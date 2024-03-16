@@ -22,10 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-#compiled down js files
+#compiled down js files & other files generated during building
 compiled_ts
 tmp
 dist
+site_map.json
 #Design files
 design_files/*
 #Homebrew test stuff
