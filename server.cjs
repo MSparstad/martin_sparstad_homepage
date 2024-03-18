@@ -11,71 +11,6 @@ const path = require("path")
 
 const routes = ["/", "/music", "/gallery", "/diverse", "/comingsoon"];
 const base_path = "dist";
-const all_files = file_crawl("./dist", []);
-
-let entry_file = "";
-
-//Recurse through all files in give folderstructure
-//
-function file_crawl(path, paths) {
-    // console.log(`crawling files `);
-    let current_paths = [];
-    let current_files = [];
-
-    let files = fs.readdirSync(path)
-
-    current_paths = files;
-    // console.log(`current_paths ${current_paths}`);
-
-    current_paths.forEach((item) => {        
-        // console.log(`item: ${item}`)
-        let full_path =  (path + "/" + item);
-        let item_stats = fs.lstatSync(full_path);
-        
-
-        // console.log(`item stats: ${item_stats}`);
-        if (item_stats.isFile()) {
-            current_files.push(full_path);
-            // console.log(`${item} is file: ${item_stats.isFile()}`);
-            // console.log("paths after push: "+ paths);
-        }
-        // else if (item_stats.isDirectory()) {
-        //     // console.log(`${item} is dir: ${item_stats.isDirectory()}`);
-        //     console.log(`recursing to  ${full_path}, current results: ${paths}`);
-        //     paths.push(file_crawl((path + "/" + item), paths));
-        //     console.log("after recursion " + paths);
-        // }
-    });
-    paths.push(path);
-    
-        paths.push(current_files);
-    
-    // console.log(current_files)
-    current_paths.forEach((item) => {
-        let full_path =  (path + "/" + item);
-        let item_stats = fs.lstatSync(full_path);
-        
-        if (item_stats.isDirectory()) {
-            //     // console.log(`${item} is dir: ${item_stats.isDirectory()}`);
-            //     console.log(`recursing to  ${full_path}, current results: ${paths}`);
-                // console.log("recursing on " + full_path);
-                paths.push(file_crawl(full_path, []));
-                
-        }
-
-    });
-
-    // console.log("New return: ");
-    // console.log(paths);
-    return paths;
-}
-
-console.table(`----------------------------------------------------------- \n`);
-console.log(all_files);
-
-// console.log(fs.readdirSync("./dist", {recursive: true}));
-
-
 const mimeTypes = {
     '.html': 'text/html',
     '.jgp': 'image/jpeg',
@@ -88,6 +23,77 @@ const mimeTypes = {
     '.json': 'application/json',
     '.svg': 'image/svg+xml',
 };
+
+
+//Removing site map as it is regenerated every time we build to check for new files
+
+
+//Checking what files we have & generating JSON map
+const all_files = file_crawl("./dist", []);
+
+
+let entry_file = "";
+
+//Recurse through all files in give folderstructure
+//params: path to start folder, paths to recurse on(pass empty array)
+function file_crawl(path, paths) {
+    // console.log(`crawling files `);
+    let current_paths = [];
+    let current_files = [];
+    let files = fs.readdirSync(path)
+
+    current_paths = files;
+    // console.log(`current_paths ${current_paths}`);
+
+    current_paths.forEach((item) => {
+        // console.log(`item: ${item}`)
+        let full_path = (path + "/" + item);
+        let item_stats = fs.lstatSync(full_path);
+
+
+        // console.log(`item stats: ${item_stats}`);
+        if (item_stats.isFile()) {
+            current_files.push(full_path);
+            // console.log(`${item} is file: ${item_stats.isFile()}`);
+            // console.log(full_path);
+        }
+        else if (item_stats.isDirectory()) {
+            //     // console.log(`${item} is dir: ${item_stats.isDirectory()}`);
+            //     console.log(`recursing to  ${full_path}, current results: ${paths}`);
+            //     paths.push(file_crawl((path + "/" + item), paths));
+
+        }
+    });
+    paths.push(path);
+    paths.push(current_files);
+
+    // console.log(current_files)
+    current_paths.forEach((item) => {
+        let full_path = (path + "/" + item);
+        let item_stats = fs.lstatSync(full_path);
+
+        if (item_stats.isDirectory()) {
+            // console.log(`\n ${full_path} ->`);
+            //     // console.log(`${item} is dir: ${item_stats.isDirectory()}`);
+            //     console.log(`recursing to  ${full_path}, current results: ${paths}`);
+            // console.log("recursing on " + full_path);
+            paths.push(file_crawl(full_path, []));
+
+        }
+
+    });
+
+    // console.log("New return: ");
+    // console.log(paths);
+
+    return paths;
+}
+
+// console.table(`----------------------------------------------------------- \n`);
+// console.log(all_files);
+
+
+
 
 const getContentType = (url) => {
     let contentType = "application/octet-stream";
@@ -169,27 +175,64 @@ const createFileStream = (filepath, fileEncoding = null) => {
             });
     }))
 }
-const promistStart = performance.now();
-
-//
-// const mypromise = createFileStream("./dist/tempname.png");
-// mypromise.then((data) => { console.log("This promise has finished " + (performance.now() - promistStart) + " png data: " + data.toString().substring(0,500))});
 
 
+if (testFileAccess("site_map.json")) {
+    fs.unlink("dist/site_map.json", (err) => {
+        if (err) {
+            console.log(err);
+        }
+    });
+};
+fs.appendFileSync("dist/site_map.json", JSON.stringify(all_files, false, 4));
 
+
+//Turns out JSON stringify does this, lesson learned..
+function site_mapper(array_map, output_file) {
+
+    let files = [];
+    let folders = [];
+    fs.appendFileSync(output_file, `{\n`);
+
+    array_map.forEach((item) => {
+        if (typeof item == "string") {
+            // fs.appendFileSync(output_file, `\"${item}\",`);
+            files.push(item);
+        }
+        else if (typeof item == "array") {
+            folders.push(item);
+        }
+    });
+
+    for (let i = 0; i < files.length; i++) {
+        fs.appendFileSync(output_file, `\"${files[i]}\"`);
+        if (i < (files.length - 1)) {
+            fs.appendFileSync(output_file, `,`);
+        }
+
+        // else {
+        //     fs.appendFileSync(output_file, `\n}`);
+
+        // }
+    }
+}
+//Hand reading index.html 
 fs.readFile("./index.html", { encoding: "utf8" }, (err, html) => { if (err) { } else { entry_file = html; console.log(); } });
-//console.log(entry_file);
-
-
-
-
 
 console.log(`BASE PATH: ${base_path} __dirname: ${__dirname}`);
 
 
 function get_handler(req, res) {
     let method = req.method, url = req.url, headers = req.headers;
+    //replacing %20 with spaces in url string to deal with encoding rules
+    const utf8_space = /%20/gi;
+    if(url.search(utf8_space) !== -1){
+        url = url.replaceAll(utf8_space, " ");
+        console.log("sapce replaced", url);
+    }
+
     console.log("Main Loop;  request start: " + method + " " + url);
+
 
     let true_path;
     const basepath_regex = new RegExp(base_path)
@@ -205,7 +248,7 @@ function get_handler(req, res) {
 
 
 
-    console.log(`Main Loop;  true path: ${true_path}, accessible: ${path_accesible}`);
+    console.log(`Main Loop;  true path: ${true_path}, accessible: ${path_accesible}, url conversion ${URL.createObjectURL(new Blob([true_path]))}`);
 
 
     if (method == "GET") {

@@ -39,7 +39,7 @@ export default {
     globImport(),
 
     nodeResolve({
-      extensions: ['.js', '.jsx'],
+      extensions: ['.js', '.jsx', ".mjs"],
       
     }),
 
