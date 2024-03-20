@@ -228,7 +228,6 @@ function get_handler(req, res) {
     const utf8_space = /%20/gi;
     if(url.search(utf8_space) !== -1){
         url = url.replaceAll(utf8_space, " ");
-        console.log("sapce replaced", url);
     }
 
     console.log("Main Loop;  request start: " + method + " " + url);
