@@ -1,133 +1,130 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Footer from "./Components/footer";
 import Header from "./Components/header";
+import Category from "./Components/category";
 import ImageGallery from "../node_modules/react-image-gallery/build/image-gallery.js";
-import getResource from "./hooks/fetcher.mjs";
+import { getResource, findNodeRecursive, accessMap, isFile } from "./hooks/fetcher.mjs";
 // import "react-image-gallery/styles/css/image-gallery.css";
 import sadFox from "./assets/taxidermy.png";
-// import old_images from "./assets/old_shit/*.png";
 
 
 
-// const fs = require('fs'); 
-// fs.readdir("./assets/old_shit",(err, files)=>console.log(files)){}
+// const images = [];
+const response = await fetch("./site_map.json");
+const json_map = await response.json();
 
-const images = [];
-let json_map = null;
+//fetch the json site map & images for initial category
 
-fetch('./site_map.json')
-  .then(response => {
-    return response.json()
-  })
-  .then(data => {
-    json_map = data;
-    return json_map
-  })
-  .then((map) => {
-    json_map = Array.from(map);
-    console.log(images.length, "length pre", "map ", json_map, "map type ", typeof json_map);
-    console.log("HELLO ", getResource("./dist/assets/old_shit/titan lads.png", json_map))
-    getResource("./dist/assets/old_shit", json_map)
-      .then((image) => {
-        console.log("img ", image);
-        for(let item in image){
-        images.push({ original: image[item].value, thumbnail: image[item].value});
-      }
-        
-        console.log(images.length, "length post", images);
-      });
-  })
-  .catch(error => console.error(error));
+// let resolved_image_promises = await getResource("./dist/assets/gallery/old_shit", json_map);
+
+// resolved_image_promises.forEach(element => {
+//   images.push({original: element.value, thumbnail: element.value});
+// });
+
+console.log(json_map);
+// console.log("images: ", images);
+
+let access_indices = findNodeRecursive("./dist/assets/gallery", json_map, []);
+access_indices.pop();
 
 
-// json_map.findIndex("./dist/assets/old_shit");
+let gallery_folder = accessMap(json_map, access_indices);
+console.log("gallery folder ", gallery_folder[2][1]);
 
-//const modules = img_server.image_folder;
-//const modules = import.meta.glob('./assets/old_shit/*.png', { eager: true, as:"raw", });
-let test_fetch = fetch("dist/assets/old_shit/Cataclysm_gunstore_massacre.png");
-test_fetch.then((response) => {
-  // console.log("01 promising fetch");
-  if (!response.ok) {
-    // console.log("02 " + response.toString());
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-  else {
-    // console.log("03 ");
-    // console.log(response);
-    return response.blob();
-  }
-})
-  .then((res3) => {
-    console.log("04 ", res3);
-    let url = URL.createObjectURL(res3);
-    console.log("05 ", url);
-    images.push({ original: url, thumbnail: url });
-  });
+console.log("for");
 
-// for (let i in images) {
-//   // console.log(i);
-//   images.push({ original: images[i].original, thumbnail: images[i].original })
-// }
-
-
-
-// .then((image) => {
-//   console.log(`image: ${image}`);
-//   images.push({original: image, thumbnail: ""});
-// })
-
-
-
-class Gallery extends React.Component {
-  constructor(props: any) {
-    super(props);
-    //console.log(modules);
-  }
-
-  render() {
-    return (
-      <div className="body-wrapper">
-        <Header />
-        <main>
-          <div className="gallery-container">
-            <div className="gallery-head">
-              <h1 className="gallery-h1">Gallery</h1>
-            </div>
-            <div className="categories-container">
-              <div className="categories-div">
-                <div className="category">
-                  <span>Kategori 1</span>
-                </div>
-                <div className="category">
-                  <span>Kategori 2</span>
-                </div>
-                <div className="category">
-                  <span>Kategori 3</span>
-                </div>
-                <div className="category">
-                  <span>Kategori 4</span>
-                </div>
-                <div className="category">
-                  <span>Kategori 5</span>
-                </div>
-                <div className="category">
-                  <span>Kategori 6</span>
-                </div>
-                <div className="category">
-                  <span>Kategori 7</span>
-                </div>
-                <div className="category">
-                  <span>Kategori 8</span>
-                </div>
-              </div>
-            </div>
-            <ImageGallery items={images} showThumbnails={true} />
-          </div>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
+async function categoryLoader(path, map) {
+  const response = await getResource(path);
 }
+
+// console.log("await test: ", await getResource("./dist/assets/old_shit/titan lads.png", json_map));
+
+console.log(await getResource(gallery_folder[2][0], json_map));
+
+function Gallery() {
+
+  const [activeCategory, setActiveCategory] = useState(2);
+  const [images, setImages] = useState([]);
+  const categories = [];
+  useEffect(() => {    
+    async function getCategory() {
+      let img_array = [];
+      console.log("get resources on: ", gallery_folder[activeCategory][0]);
+      let promise_array = await getResource(gallery_folder[activeCategory][0], json_map);
+      console.log("promises ", promise_array);
+      promise_array.forEach((element) => {
+        img_array.push({ original: element.value, thumbnail: element.value });
+      });
+      console.log("images: ", img_array);
+      if(!ignore){
+      setImages(img_array);
+      }
+    }
+    let ignore = false;
+    getCategory()
+    return() => {
+      ignore = true;
+    }
+      // return <ImageGallery items={img_array} showThumbnails={true} />;
+    
+  }, [activeCategory]);
+
+  //Create a category for each subfolder of our gallery_folder
+  for (let i = 2; i < gallery_folder.length; i++) {
+    // console.log(gallery_folder);
+    if (!isFile(gallery_folder[i][0])) {
+      let name = gallery_folder[i][0];
+
+      console.log("is folder: ", gallery_folder[i][0]);
+      // console.log("regex: ", (gallery_folder[i][0]).match(/(?<=\/).*)/));
+
+      categories.push(
+
+        <Category key={i} category_path={name} is_active={activeCategory === i} onActive={() => setActiveCategory(i)} />
+
+      );
+    }
+  }
+
+  //fetch images for current category
+
+  // async function getCategory() {
+  //   let img_array = [];
+  //   console.log("get resources on: ", gallery_folder[activeCategory][0]);
+  //   let promise_array = await getResource(gallery_folder[activeCategory][0], json_map);
+  //   console.log("promises ", promise_array);
+  //   promise_array.forEach((element) => {
+  //     img_array.push({ original: element.value, thumbail: element.value });
+  //   });
+  //   console.log("images: ", img_array);
+  //   return <ImageGallery items={img_array} showThumbnails={true} />;
+
+  // }
+
+
+  console.log("cats ", categories);
+  // console.log(getCategory());
+  return (
+    <div className="body-wrapper">
+      <Header />
+      <main>
+        <div className="gallery-container">
+
+          <div className="categories-container">
+            <div className="categories-div">
+
+              {categories}
+
+            </div>
+          </div>
+          <ImageGallery items={images} showThumbnails={true} />
+          {/* {images} */}
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 
 export default Gallery;

@@ -19,7 +19,7 @@ export default {
   output: {
     dir: 'dist',
     // preserveModules: 'true',
-    format: 'iife',
+    format: 'es',
     sourcemap: "true",
     paths: {
       'react/jsx-runtime': path.resolve(
@@ -33,6 +33,9 @@ export default {
     typescript({outDir:"dist/typescript"}),
 
     commonjs(),
+    css({
+      output: 'output.css',
+    }),
 
     styles(),
     
@@ -59,9 +62,7 @@ export default {
 
     svg(),
 
-    // css({
-    //   output: 'main.css',
-    // }),
+    
   ],
   // external: [/\.css$/],
 };

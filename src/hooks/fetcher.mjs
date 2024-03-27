@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 
-function is_file(path) {
+export function isFile(path) {
     if (/\.[a-z]{1,4}$/.test(path)) {
+        // console.log(`regex on ${path} result = `, /\.[a-z]{1,4}$/.test(path));
         return true;
     }
     else {
@@ -9,10 +10,10 @@ function is_file(path) {
     }
 }
 
-async function getResource(path, map) {
+export async function getResource(path, map) {
     let promises;
 
-    if (is_file(path)) {
+    if (isFile(path)) {
         // console.log("fetching file at: " + path);
         let item = await fetch(path);
         // console.log(item);
@@ -41,7 +42,7 @@ async function getResource(path, map) {
             }
         }
     }
-    
+    console.log(promises)
     return Promise.allSettled(promises);
 }
 
@@ -54,7 +55,7 @@ const testTarget = "dist/assets/old_shit";
  * @param {any[]} array
  * @param {any[]} indices
  */
-function findNodeRecursive(target, array, indices) {
+export function findNodeRecursive(target, array, indices) {
     let current_indices = indices;
 
     for (let i = 0; i < array.length; i++) {
@@ -72,7 +73,7 @@ function findNodeRecursive(target, array, indices) {
             //removing unnecessary entry from return
             // current_indices.pop();
             // console.log("return value: ", current_indices);
-            return true;
+            return current_indices;
         }
         else {
             current_indices.push(i);
@@ -94,7 +95,7 @@ function findNodeRecursive(target, array, indices) {
 
 //map: multi-level array we are indexing into
 //indices: array of indices indicating position we want to retrieve
-function accessMap(map, indices) {
+export function accessMap(map, indices) {
 
     let currentPlaceInArray;
 
@@ -108,4 +109,3 @@ function accessMap(map, indices) {
     return currentPlaceInArray;
 
 }
-export default getResource;

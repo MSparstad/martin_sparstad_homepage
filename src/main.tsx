@@ -6,8 +6,9 @@ import App from "./App";
 import Music from "./Music";
 import Gallery from "./Gallery";
 import ErrorPage from "./error-page";
-import "bootstrap/dist/css/bootstrap.css";
-import "./main.css";
+import "./assets/main.css";
+import "./assets/image-gallery.css";
+
 import ComingSoon from "./comingSoon";
 
 const router = createBrowserRouter([

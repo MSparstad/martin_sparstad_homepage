@@ -36,12 +36,14 @@ class LinkBar extends React.Component {
         </div>
 
         <div className="nav-item-outer">
-        {galleryLink}
+          {galleryLink}
         </div>
         <div className="nav-item-outer">
           {miscLink}
         </div>
-        <a className="nav-link" href="https://github.com/MSparstad/">GitHub</a>
+        <div className="nav-item-outer">
+          <a className="nav-link" href="https://github.com/MSparstad/">GitHub</a>
+        </div>
       </nav>
 
     );

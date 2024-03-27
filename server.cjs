@@ -182,9 +182,16 @@ if (testFileAccess("site_map.json")) {
         if (err) {
             console.log(err);
         }
+        // console.log("deleting old map");
+        fs.appendFileSync("dist/site_map.json", JSON.stringify(all_files, false, 4));
+
     });
-};
-fs.appendFileSync("dist/site_map.json", JSON.stringify(all_files, false, 4));
+
+} else
+{
+    // console.log("did not delete old");
+    fs.appendFileSync("dist/site_map.json", JSON.stringify(all_files, false, 4));    
+}
 
 
 //Turns out JSON stringify does this, lesson learned..

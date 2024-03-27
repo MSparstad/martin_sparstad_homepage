@@ -8,10 +8,10 @@
   "scripts": {
     "builddev": "npm run build && npm run dev",
     "dev": "node server.cjs",
-    "build": "npm run copy-assets && npm run bundle",
+    "build": "npx rimraf dist && (npm run copy-assets && npm run bundle)",
     "typescript-compile": "rimraf temp && tsc",
     "bundle": "rollup -c -w",
-    "copy-assets": "powershell -Command Copy-Item -Path src/assets -Destination ./dist -recurse -force",
+    "copy-assets": "powershell -Command Copy-Item -Path src/assets -Destination ./dist/assets -recurse -force -Exclude \"*.css\"",
     "lint": "eslint --cache --ext .ts src/**",
     "format": "prettier --write --cache --parser typescript \"src/**/*.ts\"",
     "prepublishOnly": "npm run build",
